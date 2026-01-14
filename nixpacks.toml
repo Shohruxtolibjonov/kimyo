@@ -1,8 +1,14 @@
 [phases.setup]
-nixPkgs = ["python311", "libxml2", "libxslt", "zlib", "gcc", "musl-dev"]
+# Python 3.11 va kerakli tizim kutubxonalari
+nixPkgs = ["python311", "libxml2", "libxslt", "zlib", "gcc", "pkg-config"]
 
 [phases.install]
-cmds = ["pip install --upgrade pip", "pip install -r requirements.txt"]
+dependsOn = ["setup"]
+cmds = [
+    "pip install --upgrade pip",
+    "pip install -r requirements.txt"
+]
 
 [start]
+# Botni ishga tushirish buyrug'i
 cmd = "python kimyo.py"
