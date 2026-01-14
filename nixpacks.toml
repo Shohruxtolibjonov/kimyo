@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["...", "libxml2", "libxslt"]
+
+[start]
+cmd = "python kimyo.py"
