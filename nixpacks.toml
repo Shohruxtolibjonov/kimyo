@@ -1,5 +1,8 @@
 [phases.setup]
-nixPkgs = ["...", "libxml2", "libxslt"]
+nixPkgs = ["python310", "libxml2", "libxslt", "zlib"]
+
+[phases.install]
+cmds = ["pip install --upgrade pip", "pip install -r requirements.txt"]
 
 [start]
 cmd = "python kimyo.py"
