@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["python310", "libxml2", "libxslt", "zlib"]
+nixPkgs = ["python311", "libxml2", "libxslt", "zlib", "gcc", "musl-dev"]
 
 [phases.install]
 cmds = ["pip install --upgrade pip", "pip install -r requirements.txt"]
