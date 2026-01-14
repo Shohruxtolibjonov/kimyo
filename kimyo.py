@@ -16,7 +16,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Bot tokeni va Admin ID
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8349883706:AAHndp5Ps5NfeBniH0XLIskzbYXTLvEOt5M")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7216956481:AAFTnOaikisEAVT2XQEfAtbmtEVAqzRWsKc")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "1365319493"))
 
 # Railway Volume path (persistent storage)
