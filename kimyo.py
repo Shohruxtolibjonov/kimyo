@@ -251,6 +251,9 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     query = update.callback_query
     await query.answer()
     
+    # Global o'zgaruvchilarni e'lon qilish
+    global attendance_active, current_session_id
+    
     if query.data == 'admin_stats':
         users_count = get_users_count()
         unread_count = len(get_unread_messages())
@@ -339,8 +342,6 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         mark_messages_read()
     
     elif query.data == 'start_attendance':
-        global attendance_active, current_session_id
-        
         if attendance_active:
             await query.answer("⚠️ Davomat allaqachon faol!", show_alert=True)
             return ConversationHandler.END
@@ -372,8 +373,6 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         )
     
     elif query.data == 'end_attendance':
-        global attendance_active
-        
         if not attendance_active:
             await query.answer("⚠️ Davomat faol emas!", show_alert=True)
             return ConversationHandler.END
