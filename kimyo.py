@@ -8,6 +8,13 @@ import sqlite3
 from datetime import datetime
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_DIR = os.path.join(BASE_DIR, "data")
+os.makedirs(DB_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(DB_DIR, "users.db")
+
+
 # Logging sozlamalari
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -18,9 +25,6 @@ logger = logging.getLogger(__name__)
 # Bot tokeni va Admin ID
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7216956481:AAFTnOaikisEAVT2XQEfAtbmtEVAqzRWsKc")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "1365319493"))
-
-# Railway Volume path (persistent storage)
-DB_PATH = os.getenv("DB_PATH", "/data/users.db")
 
 # Conversation holatlar - Foydalanuvchilar uchun
 (FISH, MANZIL, SINF, AVVAL_OQIGAN, OTA_ONA, 
