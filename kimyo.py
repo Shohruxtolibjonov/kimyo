@@ -2,10 +2,7 @@ import logging
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler, CallbackQueryHandler
 from docx import Document
-<<<<<<< HEAD
-=======
 from docx.shared import Pt, RGBColor
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
 from io import BytesIO
 import sqlite3
 from datetime import datetime
@@ -31,42 +28,29 @@ DB_PATH = os.getenv("DB_PATH", "/data/users.db")
 
 # Admin holatlar
 ADMIN_BROADCAST = 100
-<<<<<<< HEAD
 ADMIN_MESSAGE = 101
 
 # Global o'zgaruvchi - davomat sessiyasi
 attendance_active = False
 current_session_id = None
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
-
 # Database sozlash
 def init_db():
     """Database yaratish"""
     try:
-<<<<<<< HEAD
-=======
         # Agar /data papkasi mavjud bo'lmasa, yaratish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         db_dir = os.path.dirname(DB_PATH)
         if db_dir and not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
             logger.info(f"Database papkasi yaratildi: {db_dir}")
         
         conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-<<<<<<< HEAD
-        
+        c = conn.cursor()     
         # Users jadvali
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         c.execute('''CREATE TABLE IF NOT EXISTS users
                      (user_id INTEGER PRIMARY KEY,
                       username TEXT,
                       fish TEXT,
                       join_date TEXT)''')
-<<<<<<< HEAD
-        
         # Davomat jadvali
         c.execute('''CREATE TABLE IF NOT EXISTS attendance
                      (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,9 +70,6 @@ def init_db():
                       message_text TEXT,
                       sent_time TEXT,
                       is_read INTEGER DEFAULT 0)''')
-        
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         conn.commit()
         conn.close()
         logger.info(f"Database muvaffaqiyatli yaratildi: {DB_PATH}")
@@ -134,8 +115,6 @@ def get_users_count():
     except Exception as e:
         logger.error(f"Foydalanuvchilar sonini olishda xatolik: {e}")
         return 0
-
-<<<<<<< HEAD
 def get_user_info(user_id):
     """Foydalanuvchi ma'lumotini olish"""
     try:
@@ -235,9 +214,6 @@ def mark_messages_read():
         conn.close()
     except Exception as e:
         logger.error(f"Murojaatlarni yangilashda xatolik: {e}")
-
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
 async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Admin panel"""
     user_id = update.effective_user.id
@@ -247,31 +223,21 @@ async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
     
     users_count = get_users_count()
-<<<<<<< HEAD
-    unread_count = len(get_unread_messages())
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
-    
+    unread_count = len(get_unread_messages()) 
     keyboard = [
         [InlineKeyboardButton("📊 Statistika", callback_data='admin_stats')],
         [InlineKeyboardButton("📢 Xabar yuborish", callback_data='admin_broadcast')],
-<<<<<<< HEAD
         [InlineKeyboardButton("👥 Foydalanuvchilar", callback_data='admin_users_list')],
         [InlineKeyboardButton("📝 Davomat", callback_data='admin_attendance')],
         [InlineKeyboardButton(f"💬 Murojaatlar ({unread_count})", callback_data='admin_messages')],
-=======
         [InlineKeyboardButton("👥 Foydalanuvchilar ro'yxati", callback_data='admin_users_list')],
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
         f"🔐 <b>ADMIN PANEL</b>\n\n"
         f"👥 Jami foydalanuvchilar: <b>{users_count}</b>\n"
-<<<<<<< HEAD
         f"💬 Yangi murojaatlar: <b>{unread_count}</b>\n"
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         f"📅 Bugun: {datetime.now().strftime('%d.%m.%Y')}\n\n"
         f"Quyidagi tugmalardan birini tanlang:",
         reply_markup=reply_markup,
@@ -285,17 +251,14 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     
     if query.data == 'admin_stats':
         users_count = get_users_count()
-<<<<<<< HEAD
         unread_count = len(get_unread_messages())
         await query.edit_message_text(
             f"📊 <b>STATISTIKA</b>\n\n"
             f"👥 Jami foydalanuvchilar: <b>{users_count}</b>\n"
             f"💬 Yangi murojaatlar: <b>{unread_count}</b>\n"
-=======
         await query.edit_message_text(
             f"📊 <b>STATISTIKA</b>\n\n"
             f"👥 Jami foydalanuvchilar: <b>{users_count}</b>\n"
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
             f"📅 Bugun: {datetime.now().strftime('%d.%m.%Y')}",
             parse_mode='HTML'
         )
@@ -319,11 +282,7 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         users_text = "👥 <b>FOYDALANUVCHILAR RO'YXATI</b>\n\n"
         for i, (user_id, username, fish) in enumerate(users, 1):
             users_text += f"{i}. {fish or 'Nomsiz'} (@{username or 'username_yoq'})\n"
-        
-<<<<<<< HEAD
-=======
         # Uzun bo'lsa, fayl sifatida yuborish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         if len(users_text) > 4000:
             file = BytesIO(users_text.encode('utf-8'))
             file.name = 'users_list.txt'
@@ -334,8 +293,6 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             )
         else:
             await query.edit_message_text(users_text, parse_mode='HTML')
-    
-<<<<<<< HEAD
     elif query.data == 'admin_attendance':
         keyboard = [
             [InlineKeyboardButton("▶️ Davomat boshlash", callback_data='start_attendance')],
@@ -504,11 +461,7 @@ async def check_in_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             pass
     else:
         await query.edit_message_text("⚠️ Siz allaqachon davomatda turgan!")
-
-=======
     return ConversationHandler.END
-
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
 async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Barcha foydalanuvchilarga xabar yuborish"""
     users = get_all_users()
@@ -521,11 +474,7 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     failed_count = 0
     
     status_msg = await update.message.reply_text("📤 Xabar yuborilmoqda...")
-    
-<<<<<<< HEAD
-=======
     # Matn xabari
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     if update.message.text:
         message_text = update.message.text
         for user_id, username, fish in users:
@@ -539,11 +488,7 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             except Exception as e:
                 logger.error(f"Foydalanuvchi {user_id} ga xabar yuborishda xatolik: {e}")
                 failed_count += 1
-    
-<<<<<<< HEAD
-=======
     # Rasm xabari
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     elif update.message.photo:
         photo = update.message.photo[-1]
         caption = update.message.caption or ""
@@ -559,11 +504,7 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             except Exception as e:
                 logger.error(f"Foydalanuvchi {user_id} ga rasm yuborishda xatolik: {e}")
                 failed_count += 1
-    
-<<<<<<< HEAD
-=======
     # Video xabari
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     elif update.message.video:
         video = update.message.video
         caption = update.message.caption or ""
@@ -579,11 +520,7 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             except Exception as e:
                 logger.error(f"Foydalanuvchi {user_id} ga video yuborishda xatolik: {e}")
                 failed_count += 1
-    
-<<<<<<< HEAD
-=======
     # Document xabari
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     elif update.message.document:
         document = update.message.document
         caption = update.message.caption or ""
@@ -608,8 +545,6 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     )
     
     return ConversationHandler.END
-
-<<<<<<< HEAD
 async def contact_admin_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Adminga murojaat boshlash"""
     query = update.callback_query
@@ -655,25 +590,18 @@ async def receive_admin_message(update: Update, context: ContextTypes.DEFAULT_TY
         await update.message.reply_text("❌ Xatolik yuz berdi. Qayta urinib ko'ring.")
     
     return ConversationHandler.END
-
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
 async def cancel_broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Xabar yuborishni bekor qilish"""
     await update.message.reply_text("❌ Xabar yuborish bekor qilindi.")
     return ConversationHandler.END
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-<<<<<<< HEAD
     """Botni boshlash"""
     user = update.effective_user
-    
-=======
     """Botni boshlash va foydalanuvchini kutib olish"""
     user = update.effective_user
     
     # Adminni tekshirish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     if user.id == ADMIN_ID:
         keyboard = [
             [InlineKeyboardButton("🔐 Admin Panel", callback_data='show_admin_panel')],
@@ -687,30 +615,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             reply_markup=reply_markup
         )
         return ConversationHandler.END
-    
-<<<<<<< HEAD
     keyboard = [
         [InlineKeyboardButton("💬 Adminga murojaat", callback_data='contact_admin')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     await update.message.reply_text(
         f"Assalomu alaykum, {user.first_name}!\n\n"
         "🧪 Kimyo kursimizga yozilishingiz uchun so'rovnomalarga "
         "aniq va to'la javob berishingiz kerak.\n\n"
         "📝 Iltimos, to'liq ismingizni kiriting (F.I.SH):",
-<<<<<<< HEAD
         reply_markup=reply_markup
     )
-    
-=======
         reply_markup=ReplyKeyboardRemove()
     )
     
     # Foydalanuvchi ma'lumotlarini saqlash uchun
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     context.user_data['user_info'] = {
         'telegram_username': user.username or 'Username yo\'q',
         'telegram_id': user.id
@@ -719,11 +638,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return FISH
 
 async def start_form_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-<<<<<<< HEAD
     """Admin uchun ariza to'ldirish"""
-=======
     """Admin uchun ariza to'ldirish boshlash"""
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     query = update.callback_query
     await query.answer()
     
@@ -745,40 +661,27 @@ async def start_form_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
     return FISH
 
 async def show_admin_panel_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-<<<<<<< HEAD
     """Admin panelni ko'rsatish"""
-=======
     """Callback orqali admin panelni ko'rsatish"""
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     query = update.callback_query
     await query.answer()
     
     users_count = get_users_count()
-<<<<<<< HEAD
     unread_count = len(get_unread_messages())
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
-    
     keyboard = [
         [InlineKeyboardButton("📊 Statistika", callback_data='admin_stats')],
         [InlineKeyboardButton("📢 Xabar yuborish", callback_data='admin_broadcast')],
-<<<<<<< HEAD
         [InlineKeyboardButton("👥 Foydalanuvchilar", callback_data='admin_users_list')],
         [InlineKeyboardButton("📝 Davomat", callback_data='admin_attendance')],
         [InlineKeyboardButton(f"💬 Murojaatlar ({unread_count})", callback_data='admin_messages')],
-=======
         [InlineKeyboardButton("👥 Foydalanuvchilar ro'yxati", callback_data='admin_users_list')],
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await query.message.reply_text(
         f"🔐 <b>ADMIN PANEL</b>\n\n"
         f"👥 Jami foydalanuvchilar: <b>{users_count}</b>\n"
-<<<<<<< HEAD
         f"💬 Yangi murojaatlar: <b>{unread_count}</b>\n"
-=======
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         f"📅 Bugun: {datetime.now().strftime('%d.%m.%Y')}\n\n"
         f"Quyidagi tugmalardan birini tanlang:",
         reply_markup=reply_markup,
@@ -788,27 +691,19 @@ async def show_admin_panel_callback(update: Update, context: ContextTypes.DEFAUL
 async def get_fish(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """F.I.SH ni qabul qilish"""
     context.user_data['user_info']['fish'] = update.message.text
-    
-<<<<<<< HEAD
     await update.message.reply_text("🏠 Qaysi tuman, qaysi qishloqdansiz?")
-=======
     await update.message.reply_text(
         "📍 Qaysi tuman, qaysi qishloqdansiz?"
     )
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     return MANZIL
 
 async def get_manzil(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Manzilni qabul qilish"""
     context.user_data['user_info']['manzil'] = update.message.text
-    
-<<<<<<< HEAD
     await update.message.reply_text("🎓 Nechanchi sinfsiz yoki bitirganmisiz?")
-=======
     await update.message.reply_text(
         "🎓 Nechanchi sinfsiz yoki bitirganmisiz?"
     )
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     return SINF
 
 async def get_sinf(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -881,14 +776,11 @@ async def get_kelgan_sana(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 async def get_rasm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Rasmni qabul qilish"""
     if update.message.photo:
-<<<<<<< HEAD
         photo = update.message.photo[-1]
-=======
         # Eng yuqori sifatli rasmni olish
         photo = update.message.photo[-1]
         
         # Rasmni saqlash
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         context.user_data['user_info']['photo_file_id'] = photo.file_id
         
         logger.info(f"Rasm qabul qilindi: {photo.file_id}")
@@ -906,20 +798,14 @@ async def get_rasm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return RASM
 
 async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-<<<<<<< HEAD
     """Maqsadni qabul qilish va adminga yuborish"""
-=======
+
     """Maqsadni qabul qilish va ma'lumotlarni adminga yuborish"""
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     context.user_data['user_info']['maqsad'] = update.message.text
     user_info = context.user_data['user_info']
     
     logger.info(f"Ma'lumotlar to'plandi: {user_info.get('fish')}")
-    
-<<<<<<< HEAD
-=======
     # Foydalanuvchini bazaga qo'shish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     add_user(
         user_info.get('telegram_id'),
         user_info.get('telegram_username'),
@@ -927,7 +813,6 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     )
     
     try:
-<<<<<<< HEAD
         doc = Document()
         
         title = doc.add_heading('KIMYO KURSI - YANGI TALABA MA\'LUMOTLARI', 0)
@@ -938,7 +823,6 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         data_pairs = [
             ("👤 F.I.SH:", user_info.get('fish', 'N/A')),
             ("🏠 Manzil:", user_info.get('manzil', 'N/A')),
-=======
         # Word hujjat yaratish
         doc = Document()
         
@@ -952,7 +836,6 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         data_pairs = [
             ("👤 F.I.SH:", user_info.get('fish', 'N/A')),
             ("📍 Manzil:", user_info.get('manzil', 'N/A')),
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
             ("🎓 Sinf:", user_info.get('sinf', 'N/A')),
             ("📚 Avval kimyo o'qiganmi:", user_info.get('avval_oqigan', 'N/A')),
             ("👨‍👩‍👦 Ota-onasi bormi:", user_info.get('ota_ona', 'N/A')),
@@ -966,11 +849,7 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             p = doc.add_paragraph()
             p.add_run(label).bold = True
             p.add_run(f" {value}")
-        
-<<<<<<< HEAD
-=======
         # Rasm haqida ma'lumot
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         doc.add_paragraph()
         p = doc.add_paragraph()
         p.add_run("📸 Rasm: ").bold = True
@@ -978,39 +857,21 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         
         doc.add_paragraph()
         doc.add_paragraph("_" * 50)
-        
-<<<<<<< HEAD
-=======
         # Telegram ma'lumotlari
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         p = doc.add_paragraph()
         p.add_run("📱 Telegram Username: ").bold = True
         p.add_run(f"@{user_info.get('telegram_username', 'N/A')}")
-        
         p = doc.add_paragraph()
         p.add_run("🆔 Telegram ID: ").bold = True
         p.add_run(str(user_info.get('telegram_id', 'N/A')))
-        
-<<<<<<< HEAD
-=======
         # Hujjatni xotiraga saqlash
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         file_stream = BytesIO()
         doc.save(file_stream)
         file_stream.seek(0)
-        
-<<<<<<< HEAD
-=======
         # Faylni adminga yuborish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         file_name = f"Ariza_{user_info.get('fish', 'Nomsiz').replace(' ', '_')}.docx"
-        
         logger.info("Adminga fayl yuborilmoqda...")
-        
-<<<<<<< HEAD
-=======
         # Word faylni yuborish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         await context.bot.send_document(
             chat_id=ADMIN_ID,
             document=file_stream,
@@ -1022,11 +883,7 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
         
         logger.info("Word fayl yuborildi")
-        
-<<<<<<< HEAD
-=======
         # Rasmni yuborish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         if 'photo_file_id' in user_info:
             logger.info("Rasm yuborilmoqda...")
             await context.bot.send_photo(
@@ -1055,11 +912,8 @@ async def get_maqsad(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return ConversationHandler.END
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-<<<<<<< HEAD
     """Bekor qilish"""
-=======
     """So'rovnomani bekor qilish"""
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     await update.message.reply_text(
         "❌ So'rovnoma bekor qilindi.\n"
         "Qayta boshlash uchun /start ni bosing.",
@@ -1068,27 +922,18 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return ConversationHandler.END
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-<<<<<<< HEAD
     """Xatolarni qayd qilish"""
-=======
     """Error handlerlarni log qilish"""
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
     logger.error(f"Xatolik yuz berdi: {context.error}", exc_info=context.error)
 
 def main() -> None:
     """Botni ishga tushirish"""
     try:
-<<<<<<< HEAD
-=======
         # Database yaratish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         logger.info("Database yaratilmoqda...")
         init_db()
         logger.info("Database tayyor!")
-        
         application = Application.builder().token(BOT_TOKEN).build()
-        
-<<<<<<< HEAD
         application.add_error_handler(error_handler)
         
         # Admin panel
@@ -1100,7 +945,6 @@ def main() -> None:
         application.add_handler(CallbackQueryHandler(check_in_callback, pattern='check_in'))
         
         # Broadcast handler
-=======
         # Error handler qo'shish
         application.add_error_handler(error_handler)
         
@@ -1112,7 +956,6 @@ def main() -> None:
         application.add_handler(CallbackQueryHandler(start_form_callback, pattern='start_form'))
         
         # Broadcast conversation handler - MATN, RASM, VIDEO, DOCUMENT qabul qiladi
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         broadcast_handler = ConversationHandler(
             entry_points=[CallbackQueryHandler(admin_callback, pattern='admin_broadcast')],
             states={
@@ -1126,8 +969,6 @@ def main() -> None:
             fallbacks=[CommandHandler('cancel', cancel_broadcast)],
         )
         application.add_handler(broadcast_handler)
-        
-<<<<<<< HEAD
         # Contact admin handler
         contact_handler = ConversationHandler(
             entry_points=[CallbackQueryHandler(contact_admin_start, pattern='contact_admin')],
@@ -1142,12 +983,10 @@ def main() -> None:
         application.add_handler(CallbackQueryHandler(admin_callback, pattern='admin_stats|admin_users_list|admin_attendance|admin_messages|start_attendance|end_attendance|back_to_admin'))
         
         # Main conversation
-=======
         # Admin statistika va users list callbacks
         application.add_handler(CallbackQueryHandler(admin_callback, pattern='admin_stats|admin_users_list'))
         
         # Conversation handler - Foydalanuvchilar uchun
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         conv_handler = ConversationHandler(
             entry_points=[CommandHandler('start', start)],
             states={
@@ -1166,11 +1005,7 @@ def main() -> None:
         )
         
         application.add_handler(conv_handler)
-        
-<<<<<<< HEAD
-=======
         # Botni ishga tushirish
->>>>>>> a3717e12043ee3ade8397b018498ce7cef6ca91f
         logger.info("Bot ishga tushirilmoqda...")
         logger.info(f"Database path: {DB_PATH}")
         application.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
